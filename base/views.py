@@ -12,10 +12,10 @@ from . import models
 class TeacherList(generics.ListCreateAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherSerializer
-    permission_classes=[permissions.IsAuthenticated]
+    # permission_classes=[permissions.IsAuthenticated]
 
 
 class Teacher_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherSerializer 
-    permission_classes=[permissions.IsAuthenticated]   
+    # permission_classes=[permissions.IsAuthenticated]   
