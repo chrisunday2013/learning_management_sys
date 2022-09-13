@@ -28,7 +28,6 @@ class CourseCategory(models.Model):
     def __str__(self):
         return self.title    
 
-    
 
 class Course(models.Model):
     category=models.ForeignKey(CourseCategory, on_delete=models.CASCADE)
@@ -45,7 +44,18 @@ class Course(models.Model):
     def __str__(self):
         return self.title    
     
+
    
+class Chapter(models.Model):
+    course=models.ForeignKey(Course, on_delete=models.CASCADE)
+    title=models.CharField(max_length=150)
+    description=models.TextField()
+    video=models.FileField(upload_to='chapter_video/', null=True)
+    remarks=models.TextField(null=True)
+
+    class Meta:
+        verbose_name_plural="4. Chapters"
+
 
 class Student(models.Model):
     full_name=models.CharField(max_length=100)
@@ -57,7 +67,7 @@ class Student(models.Model):
     interested_categories=models.TextField()
 
     class Meta:
-        verbose_name_plural="4. Students"
+        verbose_name_plural="5. Students"
 
     def __str__(self):
         return self.full_name   

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, CourseSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -57,6 +57,14 @@ class TeacherCourseList(generics.ListAPIView):
         teacher_id=self.kwargs['teacher_id']
         teacher=models.Teacher.objects.get(pk=teacher_id)
         return models.Course.objects.filter(teacher=teacher)
+
+
+
+class ChapterList(generics.ListCreateAPIView):
+    queryset=models.Chapter.objects.all()
+    serializer_class=ChapterSerializer
+    
+
     
 
 
