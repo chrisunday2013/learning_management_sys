@@ -27,12 +27,12 @@ class Teacher_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
 def teacher_login(request):
     email=request.POST['email']
     password=request.POST['password']
+
     teacherData=models.Teacher.objects.get(email=email,password=password)
     if teacherData:
-        return JsonResponse({'bool':True, 'teacher_id':teacherData.id})
+         return JsonResponse({'bool':True, 'teacher_id':teacherData.id})
     else:
         return JsonResponse({'bool':False})    
-
 
 
 
@@ -63,7 +63,17 @@ class TeacherCourseList(generics.ListAPIView):
 class ChapterList(generics.ListCreateAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer
+
+
+
+class CourseChapterList(generics.ListAPIView):
+    serializer_class=ChapterSerializer
     
+    def get_queryset(self):
+        course_id=self.kwargs['course_id']
+        course=models.Course.objects.get(pk=course_id)
+        return models.Chapter.objects.filter(course=course)
+
 
     
 
