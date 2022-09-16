@@ -12,4 +12,5 @@ urlpatterns = [
     path('chapter/<int:pk>', views.Chapter_upate_detail.as_view()),
     path('teacher-courses/<int:teacher_id>', views.TeacherCourseList.as_view()),
     path('course-chapters/<int:course_id>', views.CourseChapterList.as_view()),
+    path('teacherCourse-details/<int:pk>', views.TeacherCourse_upate_detail_delete.as_view()),
 ]
