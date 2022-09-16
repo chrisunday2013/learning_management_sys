@@ -8,6 +8,7 @@ urlpatterns = [
     path('teacher-login', views.teacher_login),
     path('category/', views.CategoryList.as_view()),
     path('course/', views.CourseList.as_view()),
+    path('course/<int:pk>', views.Course_upate_detail_delete.as_view()),
     path('chapter/', views.ChapterList.as_view()),
     path('chapter/<int:pk>', views.Chapter_upate_detail.as_view()),
     path('teacher-courses/<int:teacher_id>', views.TeacherCourseList.as_view()),

@@ -56,6 +56,11 @@ class CourseList(generics.ListCreateAPIView):
 
 
 
+class Course_upate_detail_delete(generics.RetrieveUpdateDestroyAPIView):
+    queryset=models.Course.objects.all()
+    serializer_class=CourseSerializer           
+
+
 class TeacherCourseList(generics.ListCreateAPIView):
     serializer_class=CourseSerializer
 
