@@ -46,7 +46,13 @@ class CategoryList(generics.ListCreateAPIView):
 class CourseList(generics.ListCreateAPIView):
     queryset=models.Course.objects.all()
     serializer_class=CourseSerializer
-    # permission_classes=[permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        qs=super().get_queryset()
+        if 'result' in self.request.GET:
+            limit=int(self.request.GET['result'])
+            qs=models.Course.objects.all().order_by('-id')[:limit]
+        return qs
 
 
 
