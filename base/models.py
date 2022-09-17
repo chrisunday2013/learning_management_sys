@@ -1,4 +1,5 @@
 from django.db import models
+from django.core import serializers
 
 
 
@@ -39,6 +40,11 @@ class Course(models.Model):
 
     class Meta:
         verbose_name_plural="3. Courses"
+
+
+    def related_videos(self):
+        related_videos=Course.objects.filter(technology__icontains=self.technology)
+        return serializers.serialize('json',related_videos)    
 
 
     def __str__(self):
