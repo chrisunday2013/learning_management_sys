@@ -46,7 +46,11 @@ class Course(models.Model):
 
     def related_videos(self):
         related_videos=Course.objects.filter(technology__icontains=self.technology)
-        return serializers.serialize('json',related_videos)    
+        return serializers.serialize('json',related_videos)   
+
+    def tech_list(self):
+         tech_list=self.technology.split(',')
+         return tech_list
 
 
     def __str__(self):

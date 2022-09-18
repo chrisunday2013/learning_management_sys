@@ -52,6 +52,10 @@ class CourseList(generics.ListCreateAPIView):
         if 'result' in self.request.GET:
             limit=int(self.request.GET['result'])
             qs=models.Course.objects.all().order_by('-id')[:limit]
+
+        if 'category' in self.request.GET:
+            category=self.request.GET['category']
+            qs=models.Course.objects.filter(technology__icontains=category)    
         return qs
 
 
