@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseSerializer, StudentSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -110,5 +110,13 @@ class CourseChapterList(generics.ListAPIView):
 class Chapter_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer     
+
+
+
+class StudentList(generics.ListCreateAPIView):
+    queryset=models.Student.objects.all()
+    serializer_class=StudentSerializer
+    # permission_classes=[permissions.IsAuthenticated]
+
 
 
