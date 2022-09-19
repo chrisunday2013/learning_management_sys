@@ -16,6 +16,13 @@ class Teacher(models.Model):
     class Meta:
         verbose_name_plural="1. Teachers"
 
+
+    
+    def skill_list(self):
+         skill_list=self.skills.split(',')
+         return skill_list
+    
+
     def __str__(self):
         return self.full_name    
     
