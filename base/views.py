@@ -28,8 +28,11 @@ def teacher_login(request):
     email=request.POST['email']
     password=request.POST['password']
 
-    teacherData=models.Teacher.objects.get(email=email,password=password)
-    if teacherData:
+    try:
+        teacherData=models.Teacher.objects.get(email=email,password=password)
+    except models.Teacher.DoesNotExist:   
+         teacherData=None
+    if teacherData:     
          return JsonResponse({'bool':True, 'teacher_id':teacherData.id})
     else:
         return JsonResponse({'bool':False})    
@@ -67,7 +70,6 @@ class CourseList(generics.ListCreateAPIView):
         
 
 
-
 class Course_upate_detail_delete(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Course.objects.all()
     serializer_class=CourseSerializer           
@@ -89,7 +91,6 @@ class TeacherCourse_upate_detail_delete(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-
 class ChapterList(generics.ListCreateAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer
@@ -106,17 +107,31 @@ class CourseChapterList(generics.ListAPIView):
 
 
 
-
 class Chapter_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer     
-
 
 
 class StudentList(generics.ListCreateAPIView):
     queryset=models.Student.objects.all()
     serializer_class=StudentSerializer
     # permission_classes=[permissions.IsAuthenticated]
+
+
+@csrf_exempt
+def student_login(request):
+    email=request.POST['email']
+    password=request.POST['password']
+    try:
+        studentData=models.Student.objects.get(email=email,password=password)
+    except models.Student.DoesNotExist:   
+         studentData=None
+    if studentData:     
+         return JsonResponse({'bool':True, 'student_id':studentData.id})
+    else:
+        return JsonResponse({'bool':False})    
+
+
 
 
 
