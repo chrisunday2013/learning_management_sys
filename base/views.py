@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseSerializer, StudentSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
 from rest_framework import generics
 from . import models
-
 
 
 
@@ -69,7 +68,6 @@ class CourseList(generics.ListCreateAPIView):
         return qs
         
 
-
 class Course_upate_detail_delete(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Course.objects.all()
     serializer_class=CourseSerializer           
@@ -106,7 +104,6 @@ class CourseChapterList(generics.ListAPIView):
         return models.Chapter.objects.filter(course=course)
 
 
-
 class Chapter_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer     
@@ -130,6 +127,26 @@ def student_login(request):
          return JsonResponse({'bool':True, 'student_id':studentData.id})
     else:
         return JsonResponse({'bool':False})    
+
+
+class StudentEnrollCourseList(generics.ListCreateAPIView):
+    queryset=models.StudentCourseEnrollment.objects.all()
+    serializer_class=StudentCourseEnrollSerializer
+
+
+
+
+def studentEnrolledStatus(request, student_id, course_id):
+    student=models.Student.objects.filter(id=student_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    enrolledStatus=models.StudentCourseEnrollment.objects.filter(course=course, student=student).count()
+    if enrolledStatus:     
+         return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})    
+    
+
+
 
 
 

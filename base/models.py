@@ -1,3 +1,4 @@
+from enum import auto
 from django.db import models
 from django.core import serializers
 
@@ -88,5 +89,18 @@ class Student(models.Model):
 
     def __str__(self):
         return self.full_name   
+
+class StudentCourseEnrollment(models.Model):
+    course=models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolled_courses')  
+    student=models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrolled_student') 
+    enrolled_time=models.DateTimeField(auto_now_add=True)     
+
+    class Meta:
+        verbose_name_plural="6. Enrolled Courses"
+
+        
+    def __str__(self):
+        return f"{self.course}-{self.student}"   
+
     
     
