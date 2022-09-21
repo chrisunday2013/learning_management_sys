@@ -19,7 +19,8 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Course
         fields=['id', 'category', 'teacher', 'title', 'description',
-         'featured_img', 'technology', 'course_chapters', 'related_videos', 'tech_list']    
+         'featured_img', 'technology', 'course_chapters',
+          'related_videos', 'tech_list', 'total_enrolled_students']    
         depth=1
 
 class ChapterSerializer(serializers.ModelSerializer):
@@ -40,6 +41,7 @@ class StudentCourseEnrollSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.StudentCourseEnrollment
         fields=['id', 'course', 'student', 'enrolled_time']        
+        depth=1
 
 
 

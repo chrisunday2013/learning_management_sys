@@ -147,6 +147,19 @@ def studentEnrolledStatus(request, student_id, course_id):
     
 
 
+class EnrolledStudentList(generics.ListAPIView):
+    queryset=models.StudentCourseEnrollment.objects.all()
+    serializer_class=StudentCourseEnrollSerializer
+
+    def get_queryset(self):
+        course_id=self.kwargs['course_id']
+        course=models.Course.objects.get(pk=course_id)
+        return models.StudentCourseEnrollment.objects.filter(course=course)
+
+
+
+
+
 
 
 
