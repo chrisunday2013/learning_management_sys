@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -106,7 +106,14 @@ class CourseChapterList(generics.ListAPIView):
 
 class Chapter_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Chapter.objects.all()
-    serializer_class=ChapterSerializer     
+    serializer_class=ChapterSerializer   
+
+    # def get_serializer_context(self):
+    #     context=super().get_serializer_context()
+    #     context['chapter_duration']=self.chapter_duration
+    #     print('context----------')
+    #     print(context)
+    #     return context   
 
 
 class StudentList(generics.ListCreateAPIView):
@@ -135,7 +142,6 @@ class StudentEnrollCourseList(generics.ListCreateAPIView):
 
 
 
-
 def studentEnrolledStatus(request, student_id, course_id):
     student=models.Student.objects.filter(id=student_id).first()
     course=models.Course.objects.filter(id=course_id).first()
@@ -157,10 +163,25 @@ class EnrolledStudentList(generics.ListAPIView):
         return models.StudentCourseEnrollment.objects.filter(course=course)
 
 
+class CourseRatingList(generics.ListCreateAPIView):
+    serializer_class=CourseRatingSerializer
+
+    def get_queryset(self):
+        course_id=self.kwargs['course_id']
+        course = models.Course.objects.get(pk=course_id)
+        return models.CourseRating.objects.filter(course=course) 
 
 
 
-
+def fetch_RatingStatus(request, student_id, course_id):
+    student=models.Student.objects.filter(id=student_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    ratingStatus=models.CourseRating.objects.filter(course=course, student=student).count()
+    if ratingStatus:     
+         return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})    
+    
 
 
 
