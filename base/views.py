@@ -186,6 +186,23 @@ def fetch_RatingStatus(request, student_id, course_id):
          return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})    
+
+
+
+@csrf_exempt
+def teacher_password_change(request, teacher_id):
+    password=request.POST['password']
+
+    try:
+        teacherData=models.Teacher.objects.get(id=teacher_id)
+    except models.Teacher.DoesNotExist:   
+         teacherData=None
+    if teacherData:  
+         models.Teacher.objects.filter(id=teacher_id).update(password=password)   
+         return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})    
+
     
 
 
