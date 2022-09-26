@@ -27,7 +27,21 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.full_name    
+
+    def total_teacher_courses(self):
+        total_courses=Course.objects.filter(teacher=self).count()
+        return total_courses
+
     
+    def total_teacher_chapters(self):
+        total_chapters=Chapter.objects.filter(course__teacher=self).count()
+        return total_chapters
+
+    
+    def total_teacher_students(self):
+        total_students=StudentCourseEnrollment.objects.filter(course__teacher=self).count()
+        return total_students        
+
 
 
 class CourseCategory(models.Model):

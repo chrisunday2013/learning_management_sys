@@ -23,4 +23,5 @@ urlpatterns = [
     path('fetch-rating-status/<int:student_id>/<int:course_id>', views.fetch_RatingStatus),
     path('fetch-all-Enrolled-students/<int:teacher_id>', views.EnrolledStudentList.as_view()),
     path('teacher/change-password/<int:teacher_id>', views.teacher_password_change),
+    path('teacher/dashboard/<int:pk>', views.TeacherDashboard.as_view()),
 ]

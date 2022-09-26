@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -204,7 +204,7 @@ def teacher_password_change(request, teacher_id):
         return JsonResponse({'bool':False})    
 
     
-
-
-
+class TeacherDashboard(generics.RetrieveAPIView):
+    queryset=models.Teacher.objects.all()
+    serializer_class=TeacherDashboardSerializer
 
