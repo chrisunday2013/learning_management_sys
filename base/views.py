@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
 from rest_framework import generics
 from . import models
+from django.db.models import Q
 
 
 
@@ -65,7 +66,8 @@ class CourseList(generics.ListCreateAPIView):
             teacher=self.request.GET['teacher']
             teacher=models.Teacher.objects.filter(id=teacher).first()
             qs=models.Course.objects.filter(technology__icontains=skill_name, teacher=teacher)    
-        return qs
+      
+        return qs     
         
 
 class Course_upate_detail_delete(generics.RetrieveUpdateDestroyAPIView):
@@ -171,9 +173,6 @@ class EnrolledStudentList(generics.ListAPIView):
             student=models.Student.objects.get(pk=student_id)
             return models.StudentCourseEnrollment.objects.filter(student=student).distinct()
     
-
-
-
 
 class CourseRatingList(generics.ListCreateAPIView):
     serializer_class=CourseRatingSerializer
