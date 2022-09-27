@@ -216,7 +216,16 @@ class TeacherDashboard(generics.RetrieveAPIView):
 
 class StudentFavoriteCourseList(generics.ListCreateAPIView):
     queryset=models.StudentFavoriteCourse.objects.all()
-    serializer_class=StudentFavoriteCourseSerializer    
+    serializer_class=StudentFavoriteCourseSerializer 
+
+    
+    def get_queryset(self):
+       
+        if 'student_id' in self.kwargs:
+            student_id=self.kwargs['student_id']
+            student=models.Student.objects.get(pk=student_id)
+            return models.StudentFavoriteCourse.objects.filter(student=student).distinct()
+       
 
 
 def remove_favorite_course(request, student_id, course_id):
