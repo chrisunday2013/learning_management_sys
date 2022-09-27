@@ -1,3 +1,6 @@
+from msilib.schema import Upgrade
+from random import seed
+from sys import set_coroutine_origin_tracking_depth
 from rest_framework import serializers 
 from . import models 
 
@@ -89,4 +92,15 @@ class TeacherDashboardSerializer(serializers.ModelSerializer):
         fields=['total_teacher_courses','total_teacher_students', 'total_teacher_chapters']
 
 
-    
+class StudentFavoriteCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=models.StudentFavoriteCourse
+        fields=['id','course','student','status']
+
+    def __init__(self, *args, **kwargs):
+        super(StudentFavoriteCourseSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0
+        if request and request.method == 'GET':
+            self.Meta.depth = 2        
+

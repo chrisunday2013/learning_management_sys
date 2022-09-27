@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -213,3 +213,28 @@ def teacher_password_change(request, teacher_id):
 class TeacherDashboard(generics.RetrieveAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherDashboardSerializer
+
+class StudentFavoriteCourseList(generics.ListCreateAPIView):
+    queryset=models.StudentFavoriteCourse.objects.all()
+    serializer_class=StudentFavoriteCourseSerializer    
+
+
+def remove_favorite_course(request, student_id, course_id):
+    student=models.Student.objects.filter(id=student_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    favoriteStatus=models.StudentFavoriteCourse.objects.filter(course=course, student=student).delete()
+    if favoriteStatus:     
+         return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})    
+
+
+def student_favorite_status(request, student_id, course_id):
+    student=models.Student.objects.filter(id=student_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    favoriteStatus=models.StudentFavoriteCourse.objects.filter(course=course, student=student).first()
+    if favoriteStatus and favoriteStatus.status == True:  
+         return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})    
+
