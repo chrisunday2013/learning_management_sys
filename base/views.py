@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentCourseEnrollSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -247,3 +247,14 @@ def student_favorite_status(request, student_id, course_id):
     else:
         return JsonResponse({'bool':False})    
 
+
+class StudentAssignment(generics.ListCreateAPIView):
+    queryset=models.StudentAssignment.objects.all()
+    serializer_class=StudentAssignmentSerializer
+
+    def get_queryset(self):
+        student_id=self.kwargs['student_id']
+        teacher_id=self.kwargs['teacher_id']
+        student = models.Student.objects.get(pk=student_id)
+        teacher = models.Teacher.objects.get(pk=teacher_id)
+        return models.StudentAssignment.objects.filter(student=student,teacher=teacher)

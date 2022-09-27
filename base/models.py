@@ -1,5 +1,4 @@
-from enum import auto
-from tabnanny import verbose
+
 from django.db import models
 from django.core import serializers
 
@@ -139,6 +138,10 @@ class CourseRating(models.Model):
 
     def __str__(self):
         return f"{self.course}-{self.student}-{self.rating}"  
+
+    
+    class Meta:
+        verbose_name_plural="7. Course Rating"    
     
 
 class StudentFavoriteCourse(models.Model):
@@ -147,7 +150,22 @@ class StudentFavoriteCourse(models.Model):
     status=models.BooleanField(default=False)
 
     class Meta:
-        verbose_name_plural="7. Student Favorite Courses"
+        verbose_name_plural="8. Student Favorite Courses"
 
     def __str__(self):
         return f"{self.course}-{self.student}"    
+
+
+   
+class StudentAssignment(models.Model):
+    teacher=models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True)
+    student=models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    title=models.CharField(max_length=200)
+    detail=models.TextField(null=True)
+    add_time=models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural="9. Student Assignment"
+
+    def __str__(self):
+        return self.title          
