@@ -30,6 +30,6 @@ urlpatterns = [
     path('fetch-fav-status/<int:student_id>/<int:course_id>', views.student_favorite_status),
     path('fetch-fav-courses/<int:student_id>', views.StudentFavoriteCourseList.as_view()),
     path('student-assignment/<int:teacher_id>/<int:student_id>', views.StudentAssignment.as_view()),
-    
+    path('user-assignment/<int:student_id>', views.UserAssignmentList.as_view()),
 
 ]
