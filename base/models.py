@@ -162,6 +162,7 @@ class StudentAssignment(models.Model):
     student=models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     title=models.CharField(max_length=200)
     detail=models.TextField(null=True)
+    student_status=models.BooleanField(default=False, null=True)
     add_time=models.DateField(auto_now_add=True)
 
     class Meta:

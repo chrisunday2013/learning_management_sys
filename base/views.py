@@ -270,3 +270,11 @@ class UserAssignmentList(generics.ListCreateAPIView):
         student_id=self.kwargs['student_id']
         student = models.Student.objects.get(pk=student_id)
         return models.StudentAssignment.objects.filter(student=student)        
+
+
+
+class UpdateAssignment(generics.RetrieveUpdateDestroyAPIView):
+    queryset=models.StudentAssignment.objects.all()
+    serializer_class=StudentAssignmentSerializer
+
+                  
