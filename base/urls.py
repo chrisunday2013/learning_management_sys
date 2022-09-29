@@ -33,5 +33,6 @@ urlpatterns = [
     path('user-assignment/<int:student_id>', views.UserAssignmentList.as_view()),
     path('update-assignment/<int:pk>', views.UpdateAssignment.as_view()),
     path('student/dashboard/<int:pk>', views.StudentDashboard.as_view()),
+    path('student/<int:pk>', views.Student_update_destroy_detail.as_view()),
 
 ]

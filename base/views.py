@@ -38,12 +38,10 @@ def teacher_login(request):
         return JsonResponse({'bool':False})    
 
 
-
 class CategoryList(generics.ListCreateAPIView):
     queryset=models.CourseCategory.objects.all()
     serializer_class=CategorySerializer
     # permission_classes=[permissions.IsAuthenticated]
-
 
 
 class CourseList(generics.ListCreateAPIView):
@@ -59,7 +57,6 @@ class CourseList(generics.ListCreateAPIView):
         if 'category' in self.request.GET:
             category=self.request.GET['category']
             qs=models.Course.objects.filter(technology__icontains=category)    
-
 
         if 'skill_name' in self.request.GET and 'teacher' in self.request.GET:
             skill_name=self.request.GET['skill_name']
@@ -84,17 +81,14 @@ class TeacherCourseList(generics.ListCreateAPIView):
         return models.Course.objects.filter(teacher=teacher)
 
 
-
 class TeacherCourse_upate_detail_delete(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Course.objects.all()
     serializer_class=CourseSerializer     
 
 
-
 class ChapterList(generics.ListCreateAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer
-
 
 
 class CourseChapterList(generics.ListAPIView):
@@ -143,7 +137,6 @@ class StudentEnrollCourseList(generics.ListCreateAPIView):
     serializer_class=StudentCourseEnrollSerializer
 
 
-
 def studentEnrolledStatus(request, student_id, course_id):
     student=models.Student.objects.filter(id=student_id).first()
     course=models.Course.objects.filter(id=course_id).first()
@@ -153,7 +146,6 @@ def studentEnrolledStatus(request, student_id, course_id):
     else:
         return JsonResponse({'bool':False})    
     
-
 
 class EnrolledStudentList(generics.ListAPIView):
     queryset=models.StudentCourseEnrollment.objects.all()
@@ -183,7 +175,6 @@ class CourseRatingList(generics.ListCreateAPIView):
         return models.CourseRating.objects.filter(course=course) 
 
 
-
 def fetch_RatingStatus(request, student_id, course_id):
     student=models.Student.objects.filter(id=student_id).first()
     course=models.Course.objects.filter(id=course_id).first()
@@ -192,7 +183,6 @@ def fetch_RatingStatus(request, student_id, course_id):
          return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})    
-
 
 
 @csrf_exempt
@@ -214,8 +204,7 @@ class TeacherDashboard(generics.RetrieveAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherDashboardSerializer
 
-
-   
+ 
 class StudentDashboard(generics.RetrieveAPIView):
     queryset=models.Student.objects.all()
     serializer_class=StudentDashboardSerializer
@@ -233,7 +222,6 @@ class StudentFavoriteCourseList(generics.ListCreateAPIView):
             student=models.Student.objects.get(pk=student_id)
             return models.StudentFavoriteCourse.objects.filter(student=student).distinct()
        
-
 
 def remove_favorite_course(request, student_id, course_id):
     student=models.Student.objects.filter(id=student_id).first()
@@ -267,8 +255,6 @@ class StudentAssignment(generics.ListCreateAPIView):
         return models.StudentAssignment.objects.filter(student=student,teacher=teacher)
 
 
-
-
 class UserAssignmentList(generics.ListCreateAPIView):
     queryset=models.StudentAssignment.objects.all()
     serializer_class=StudentAssignmentSerializer
@@ -279,9 +265,11 @@ class UserAssignmentList(generics.ListCreateAPIView):
         return models.StudentAssignment.objects.filter(student=student)        
 
 
-
 class UpdateAssignment(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.StudentAssignment.objects.all()
     serializer_class=StudentAssignmentSerializer
 
-                  
+class Student_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=models.Student.objects.all()
+    serializer_class=StudentSerializer 
+    # permission_classes=[permissions.IsAuthenticated]   
