@@ -23,6 +23,7 @@ urlpatterns = [
     path('fetch-rating-status/<int:student_id>/<int:course_id>', views.fetch_RatingStatus),
     path('fetch-all-Enrolled-students/<int:teacher_id>', views.EnrolledStudentList.as_view()),
     path('teacher/change-password/<int:teacher_id>', views.teacher_password_change),
+    path('student/change-password/<int:student_id>', views.student_password_change),
     path('teacher/dashboard/<int:pk>', views.TeacherDashboard.as_view()),
     path('fetch-Enrolled-courses/<int:student_id>', views.EnrolledStudentList.as_view()),
     path('student-add-fav-course', views.StudentFavoriteCourseList.as_view()),

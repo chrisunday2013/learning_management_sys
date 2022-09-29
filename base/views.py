@@ -273,3 +273,19 @@ class Student_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Student.objects.all()
     serializer_class=StudentSerializer 
     # permission_classes=[permissions.IsAuthenticated]   
+
+
+
+@csrf_exempt
+def student_password_change(request, student_id):
+    password=request.POST['password']
+
+    try:
+        studentData=models.Teacher.objects.get(id=student_id)
+    except models.Student.DoesNotExist:   
+         studentData=None
+    if studentData:  
+         models.Student.objects.filter(id=student_id).update(password=password)   
+         return JsonResponse({'bool':True})
+    else:
+        return JsonResponse({'bool':False})  
