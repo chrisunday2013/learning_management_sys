@@ -35,5 +35,7 @@ urlpatterns = [
     path('update-assignment/<int:pk>', views.UpdateAssignment.as_view()),
     path('student/dashboard/<int:pk>', views.StudentDashboard.as_view()),
     path('student/<int:pk>', views.Student_update_destroy_detail.as_view()),
+    path('student/fetch-all-notifications/<int:student_id>', views.NotificationList.as_view()),
+    path('save-notification/', views.NotificationList.as_view()),
 
 ]

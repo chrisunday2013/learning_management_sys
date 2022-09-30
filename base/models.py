@@ -1,3 +1,5 @@
+
+from tkinter import CASCADE
 from django.db import models
 from django.core import serializers
 
@@ -186,4 +188,50 @@ class StudentAssignment(models.Model):
         verbose_name_plural="9. Student Assignment"
 
     def __str__(self):
-        return self.title          
+        return self.title        
+
+
+class Notification(models.Model):
+    teacher=models.ForeignKey(Teacher, on_delete=models.CASCADE,  null=True)
+    student=models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    notif_subject=models.CharField(max_length=250,null=True, verbose_name='Notification Subject')
+    notif_for=models.CharField(max_length=250, verbose_name='Notification For')
+    notif_created_time=models.DateTimeField(auto_now_add=True)    
+    notif_status=models.BooleanField(default=False, verbose_name='Notification Status')     
+
+
+    class Meta:
+        verbose_name_plural="10. Notification"
+
+    
+class Quiz(models.Model):
+    teacher=models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True)
+    title=models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    detail=models.TextField()
+    add_time=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural="11. Quiz"
+
+
+class QuizQuestions(models.Model):
+    quiz=models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True)
+    questions=models.CharField(max_length=200)
+    ans1=models.CharField(max_length=200)    
+    ans2=models.CharField(max_length=200)    
+    ans3=models.CharField(max_length=200)    
+    ans4=models.CharField(max_length=200)   
+    right_ans=models.CharField(max_length=200)  
+    add_time=models.DateTimeField(auto_now_add=True)       
+
+    class Meta:
+        verbose_name_plural="12. Quiz Questions"
+
+class CourseQuiz(models.Model):
+    course=models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    quiz=models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True)       
+    add_time=models.DateTimeField(auto_now_add=True)
+
+
+    class Meta:
+        verbose_name_plural="13. Course Quiz" 

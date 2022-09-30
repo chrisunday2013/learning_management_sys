@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -262,6 +262,8 @@ class UserAssignmentList(generics.ListCreateAPIView):
     def get_queryset(self):
         student_id=self.kwargs['student_id']
         student = models.Student.objects.get(pk=student_id)
+        #update Notifications
+        models.Notification.objects.filter(student=student,notif_for='student', notif_subject='assigment').update(notif_status=True)
         return models.StudentAssignment.objects.filter(student=student)        
 
 
@@ -289,3 +291,16 @@ def student_password_change(request, student_id):
          return JsonResponse({'bool':True})
     else:
         return JsonResponse({'bool':False})  
+
+
+
+
+class NotificationList(generics.ListCreateAPIView):
+    queryset=models.Notification.objects.all()
+    serializer_class=NotificationSerializer
+
+    def get_queryset(self):
+        student_id = self.kwargs['student_id']
+        student = models.Student.objects.get(pk=student_id)
+        return models.Notification.objects.filter(student=student,notif_for='student', notif_subject='assignment', notif_status=False)
+
