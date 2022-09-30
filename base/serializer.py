@@ -128,3 +128,19 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.StudentAssignment
         fields=['id','teacher','student','notif_subject', 'notif_for', 'notif_created_time', 'notif_status']
+
+
+
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=models.Quiz
+        fields=['id', 'teacher', 'title', 'detail', 'add_time']    
+        
+            
+    def __init__(self, *args, **kwargs):
+        super(QuizSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        self.Meta.depth = 0 
+        if request and request.method == 'GET':
+            self.Meta.depth = 2 
+

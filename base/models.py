@@ -206,7 +206,7 @@ class Notification(models.Model):
     
 class Quiz(models.Model):
     teacher=models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True)
-    title=models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    title=models.CharField(max_length=200, null=True)
     detail=models.TextField()
     add_time=models.DateTimeField(auto_now_add=True)
 
