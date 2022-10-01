@@ -319,3 +319,17 @@ class TeacherQuizList(generics.ListCreateAPIView):
         teacher_id=self.kwargs['teacher_id']
         teacher=models.Teacher.objects.get(pk=teacher_id)
         return models.Quiz.objects.filter(teacher=teacher)
+
+
+
+
+class TeacherQuizDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=models.Quiz.objects.all()
+    serializer_class=QuizSerializer  
+
+
+class Quiz_upate_detail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=models.Quiz.objects.all()
+    serializer_class=QuizSerializer   
+
+   
