@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -330,6 +330,16 @@ class TeacherQuizDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class Quiz_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Quiz.objects.all()
-    serializer_class=QuizSerializer   
+    serializer_class=QuizSerializer  
+
+
+class QuizQuestionList(generics.ListAPIView):
+    serializer_class=QuestionSerializer
+    
+    def get_queryset(self):
+        quiz_id=self.kwargs['quiz_id']
+        quiz=models.Quiz.objects.get(pk=quiz_id)
+        return models.QuizQuestions.objects.filter(quiz=quiz)
+
 
    
