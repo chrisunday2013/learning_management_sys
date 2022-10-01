@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CategorySerializer, ChapterSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import CategorySerializer, ChapterSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -293,8 +293,6 @@ def student_password_change(request, student_id):
         return JsonResponse({'bool':False})  
 
 
-
-
 class NotificationList(generics.ListCreateAPIView):
     queryset=models.Notification.objects.all()
     serializer_class=NotificationSerializer
@@ -305,11 +303,9 @@ class NotificationList(generics.ListCreateAPIView):
         return models.Notification.objects.filter(student=student,notif_for='student', notif_subject='assignment', notif_status=False)
 
 
-
 class QuizList(generics.ListCreateAPIView):
     queryset=models.Quiz.objects.all()
     serializer_class=QuizSerializer
-
 
 
 class TeacherQuizList(generics.ListCreateAPIView):
@@ -319,8 +315,6 @@ class TeacherQuizList(generics.ListCreateAPIView):
         teacher_id=self.kwargs['teacher_id']
         teacher=models.Teacher.objects.get(pk=teacher_id)
         return models.Quiz.objects.filter(teacher=teacher)
-
-
 
 
 class TeacherQuizDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -333,7 +327,7 @@ class Quiz_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=QuizSerializer  
 
 
-class QuizQuestionList(generics.ListAPIView):
+class QuizQuestionList(generics.ListCreateAPIView):
     serializer_class=QuestionSerializer
     
     def get_queryset(self):
@@ -341,5 +335,19 @@ class QuizQuestionList(generics.ListAPIView):
         quiz=models.Quiz.objects.get(pk=quiz_id)
         return models.QuizQuestions.objects.filter(quiz=quiz)
 
+
+class AssignQuizCourseList(generics.ListCreateAPIView):
+    queryset=models.CourseQuiz.objects.all()
+    serializer_class=CourseQuizSerializer
+
+
+def fetch_quiz_assign_status(request, quiz_id, course_id):
+    quiz=models.Quiz.objects.filter(id=quiz_id).first()
+    course=models.Course.objects.filter(id=course_id).first()
+    assignStatus=models.CourseQuiz.objects.filter(course=course, quiz=quiz).count()
+    if assignStatus:
+        return JsonResponse({'bool':True})    
+    else:
+        return JsonResponse({'bool':False})    
 
    

@@ -210,6 +210,9 @@ class Quiz(models.Model):
     detail=models.TextField()
     add_time=models.DateTimeField(auto_now_add=True)
 
+    def assign_status(self):
+        return CourseQuiz.objects.filter(quiz=self).count()
+
     class Meta:
         verbose_name_plural="11. Quiz"
 
@@ -228,6 +231,7 @@ class QuizQuestions(models.Model):
         verbose_name_plural="12. Quiz Questions"
 
 class CourseQuiz(models.Model):
+    teacher=models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True)
     course=models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
     quiz=models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True)       
     add_time=models.DateTimeField(auto_now_add=True)
@@ -235,3 +239,5 @@ class CourseQuiz(models.Model):
 
     class Meta:
         verbose_name_plural="13. Course Quiz" 
+
+   
