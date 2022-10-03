@@ -43,8 +43,12 @@ urlpatterns = [
     path('teacherQuiz-detail/<int:pk>', views.TeacherQuizDetail.as_view()),
     path('quiz/<int:pk>', views.Quiz_upate_detail.as_view()),
     path('quiz-questions/<int:quiz_id>', views.QuizQuestionList.as_view()),
+    path('quiz-questions/<int:quiz_id>/<int:limit>', views.QuizQuestionList.as_view()),
 
     path('fetch-quiz-assign-status/<int:quiz_id>/<int:course_id>', views.fetch_quiz_assign_status),
     path('quiz-assign-course/', views.AssignQuizCourseList.as_view()),
     path('fetch-assigned-quiz/<int:course_id>', views.AssignQuizCourseList.as_view()),
+    path('attempt-quiz/', views.AttemptQuizList.as_view()),
+    path('quiz-questions/<int:quiz_id>/next-question/<int:question_id>', views.QuizQuestionList.as_view()),
+    path('fetch-quiz-attempt-status/<int:quiz_id>/<int:student_id>', views.fetch_quiz_attempt_status),
 ]
