@@ -63,7 +63,23 @@ class CourseList(generics.ListCreateAPIView):
             teacher=self.request.GET['teacher']
             teacher=models.Teacher.objects.filter(id=teacher).first()
             qs=models.Course.objects.filter(technology__icontains=skill_name, teacher=teacher)    
-      
+       
+        
+        if 'search_id' in self.kwargs:
+            search=self.kwargs['search_id']
+            if search: 
+                 qs=models.Course.objects.filter(Q(title__icontains=search)|Q(technology__icontains=search))    
+
+        elif 'studentId' in self.kwargs:
+            student_id=self.kwargs['studentId']
+            student = models.Student.objects.get(pk=student_id)
+            print(student.interested_categories)
+            queries = [Q(technology__iendswith=value) for value in student.interested_categories]
+            query = queries.pop()
+            for item in queries:
+                query !=item
+            qs=models.Course.objects.filter(query)   
+            return qs 
         return qs     
         
 
