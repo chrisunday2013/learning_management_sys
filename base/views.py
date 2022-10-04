@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import AttemptQuizSerializer, CategorySerializer, ChapterSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import AttemptQuizSerializer, CategorySerializer, ChapterSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, StudyMaterialSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -120,12 +120,12 @@ class Chapter_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Chapter.objects.all()
     serializer_class=ChapterSerializer   
 
-    # def get_serializer_context(self):
-    #     context=super().get_serializer_context()
-    #     context['chapter_duration']=self.chapter_duration
-    #     print('context----------')
-    #     print(context)
-    #     return context   
+    def get_serializer_context(self):
+        context=super().get_serializer_context()
+        context['chapter_duration']=self.chapter_duration
+        print('context----------')
+        print(context)
+        return context   
 
 
 class StudentList(generics.ListCreateAPIView):
@@ -395,4 +395,19 @@ def fetch_quiz_attempt_status(request, quiz_id, student_id):
     else:
         return JsonResponse({'bool':False})   
 
-   
+
+class StudyMaterialList(generics.ListCreateAPIView):
+    serializer_class=StudyMaterialSerializer
+    
+    def get_queryset(self):
+        course_id=self.kwargs['course_id']
+        course=models.Course.objects.get(pk=course_id)
+        return models.StudyMaterial.objects.filter(course=course)
+
+
+class StudyMaterial(generics.RetrieveUpdateDestroyAPIView):
+    queryset=models.StudyMaterial.objects.all()
+    serializer_class=StudyMaterialSerializer   
+  
+
+

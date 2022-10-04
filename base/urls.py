@@ -53,4 +53,7 @@ urlpatterns = [
     path('fetch-quiz-attempt-status/<int:quiz_id>/<int:student_id>', views.fetch_quiz_attempt_status),
 
     path('search-courses/<str:search_id>', views.CourseList.as_view()),
+
+    path('study-materials/<int:course_id>', views.StudyMaterialList.as_view()),
+    path('study-materials/<int:pk>', views.StudyMaterial.as_view()),
 ]
