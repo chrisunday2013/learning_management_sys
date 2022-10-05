@@ -56,4 +56,5 @@ urlpatterns = [
 
     path('study-materials/<int:course_id>', views.StudyMaterialList.as_view()),
     path('study-materials/<int:pk>', views.StudyMaterial.as_view()),
+    path('user/study-materials/<int:course_id>', views.StudyMaterialList.as_view()),
 ]
