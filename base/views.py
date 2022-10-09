@@ -1,3 +1,4 @@
+from xml.etree.ElementInclude import LimitedRecursiveIncludeError
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -183,12 +184,20 @@ class EnrolledStudentList(generics.ListAPIView):
     
 
 class CourseRatingList(generics.ListCreateAPIView):
+    queryset=models.CourseRating.objects.all()
     serializer_class=CourseRatingSerializer
 
     def get_queryset(self):
-        course_id=self.kwargs['course_id']
-        course = models.Course.objects.get(pk=course_id)
-        return models.CourseRating.objects.filter(course=course) 
+        if 'popular' in self.request.GET:
+            sql="SELECT *,AVG(cr.rating) as avg_rating FROM base_courserating as cr INNER JOIN base_course as c ON cr.course_id=c.id GROUP BY c.id ORDER BY avg_rating desc Limit 4"
+            return models.CourseRating.objects.raw(sql)
+        if 'all' in self.request.GET:
+            sql="SELECT *, AVG(cr.rating) as avg_rating FROM base_courserating as cr INNER JOIN base_course as c ON cr.course_id=c.id GROUP BY c.id ORDER BY avg_rating desc"
+            return models.CourseRating.objects.raw(sql)
+             
+        # course_id=self.kwargs['course_id']
+        # course = models.Course.objects.get(pk=course_id)
+        # return models.CourseRating.objects.filter(course=course) 
 
 
 def fetch_RatingStatus(request, student_id, course_id):
@@ -293,7 +302,6 @@ class Student_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes=[permissions.IsAuthenticated]   
 
 
-
 @csrf_exempt
 def student_password_change(request, student_id):
     password=request.POST['password']
@@ -343,6 +351,17 @@ class Quiz_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class=QuizSerializer  
 
 
+
+
+class QuizQuestionList(generics.ListCreateAPIView):
+    serializer_class=QuestionSerializer
+
+    def get_queryset(self):
+        quiz_id=self.kwargs['quiz_id']
+        quiz=models.Quiz.objects.get(pk=quiz_id)
+        return models.QuizQuestions.objects.filter(quiz=quiz)
+
+
 class QuizQuestionList(generics.ListCreateAPIView):
     serializer_class=QuestionSerializer
     
@@ -379,21 +398,35 @@ def fetch_quiz_assign_status(request, quiz_id, course_id):
         return JsonResponse({'bool':False})   
 
 
-
 class AttemptQuizList(generics.ListCreateAPIView):
     queryset=models.AttemptQuiz.objects.all()
     serializer_class=AttemptQuizSerializer
 
+    def get_queryset(self):
+        if 'quiz_id' in self.kwargs:
+            quiz_id=self.kwargs['quiz_id']
+            quiz = models.Quiz.objects.get(pk=quiz_id)
+        return models.AttemptQuiz.objects.filter(quiz=quiz).values('student')
+            # .raw(f'SELECT * FROM base_attemptquiz WHERE quiz_id={int(quiz_id)} GROUP by student_id')
 
 
 def fetch_quiz_attempt_status(request, quiz_id, student_id):
     quiz=models.Quiz.objects.filter(id=quiz_id).first()
     student=models.Student.objects.filter(id=student_id).first()
-    attemptStatus=models.AttemptQuiz.objects.filter(student=student,question__quiz=quiz).count()
+    attemptStatus=models.AttemptQuiz.objects.filter(student=student, question__quiz=quiz).count()
+    print(models.AttemptQuiz.objects.filter(student=student, question__quiz=quiz).query) 
     if attemptStatus > 0:
-        return JsonResponse({'bool':True})    
+        return JsonResponse({'bool':True})
     else:
-        return JsonResponse({'bool':False})   
+        return JsonResponse({'bool':False})               
+
+       
+# def fetch_quiz_attempt_status(request, quiz_id, student_id):
+#     quiz=models.Quiz.objects.filter(id=quiz_id).first()
+#     student=models.Student.objects.filter(id=student_id).first()
+#     total_questions=models.QuizQuestions.objects.filter(quiz=quiz).count()
+#     total_attempted_questions=models.AttemptQuiz.objects.filter(quiz=quiz,student=student).values('student').count()
+#     return JsonResponse({'total_questions':total_questions, 'total_attempted':total_attempted_questions})  
 
 
 class StudyMaterialList(generics.ListCreateAPIView):
@@ -409,5 +442,3 @@ class StudyMaterial(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.StudyMaterial.objects.all()
     serializer_class=StudyMaterialSerializer   
   
-
-

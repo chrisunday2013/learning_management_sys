@@ -13,6 +13,7 @@ urlpatterns = [
     path('chapter/<int:pk>', views.Chapter_upate_detail.as_view()),
     path('teacher-courses/<int:teacher_id>', views.TeacherCourseList.as_view()),
     path('course-chapters/<int:course_id>', views.CourseChapterList.as_view()),
+    path('popular-courses/' , views.CourseRatingList.as_view()),
     path('teacherCourse-details/<int:pk>', views.TeacherCourse_upate_detail_delete.as_view()),
     path('student/', views.StudentList.as_view()),
     path('student-login', views.student_login),
@@ -49,6 +50,7 @@ urlpatterns = [
     path('quiz-assign-course/', views.AssignQuizCourseList.as_view()),
     path('fetch-assigned-quiz/<int:course_id>', views.AssignQuizCourseList.as_view()),
     path('attempt-quiz/', views.AttemptQuizList.as_view()),
+    
     path('quiz-questions/<int:quiz_id>/next-question/<int:question_id>', views.QuizQuestionList.as_view()),
     path('fetch-quiz-attempt-status/<int:quiz_id>/<int:student_id>', views.fetch_quiz_attempt_status),
 
@@ -57,4 +59,7 @@ urlpatterns = [
     path('study-materials/<int:course_id>', views.StudyMaterialList.as_view()),
     path('study-materials/<int:pk>', views.StudyMaterial.as_view()),
     path('user/study-materials/<int:course_id>', views.StudyMaterialList.as_view()),
+    path('attempted-quiz/<int:quiz_id>', views.AttemptQuizList.as_view()),
+    # path('fetch-quiz-result/<int:quiz_id_result>/<int:student_id>', views.fetch_quiz_attempt_status)
+
 ]

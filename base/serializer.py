@@ -82,7 +82,7 @@ class CourseRatingSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         self.Meta.depth = 0 
         if request and request.method == 'GET':
-            self.Meta.depth = 1  
+            self.Meta.depth = 2  
 
 class TeacherDashboardSerializer(serializers.ModelSerializer):
     class Meta:
