@@ -440,5 +440,11 @@ class StudyMaterialList(generics.ListCreateAPIView):
 
 class StudyMaterial(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.StudyMaterial.objects.all()
-    serializer_class=StudyMaterialSerializer   
+    serializer_class=StudyMaterialSerializer  
+
+def update_view(request,course_id):
+    queryset=models.Course.objects.filter(pk=course_id).first()
+    queryset.course_views+=1
+    queryset.save()
+    return JsonResponse({'views':queryset.course_views})     
   
