@@ -40,6 +40,8 @@ urlpatterns = [
     path('student/fetch-all-notifications/<int:student_id>', views.NotificationList.as_view()),
     path('save-notification/', views.NotificationList.as_view()),
 
+    path('student-testimonial/', views.CourseRatingList.as_view()),
+
     path('quiz/', views.QuizList.as_view()),
     path('show-quiz/<int:teacher_id>', views.TeacherQuizList.as_view()),
     path('teacherQuiz-detail/<int:pk>', views.TeacherQuizDetail.as_view()),

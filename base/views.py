@@ -199,6 +199,7 @@ class CourseRatingList(generics.ListCreateAPIView):
         if 'all' in self.request.GET:
             sql="SELECT *, AVG(cr.rating) as avg_rating FROM base_courserating as cr INNER JOIN base_course as c ON cr.course_id=c.id GROUP BY c.id ORDER BY avg_rating desc"
             return models.CourseRating.objects.raw(sql)
+        return models.CourseRating.objects.filter(course__isnull=False).order_by('-rating')    
              
         # course_id=self.kwargs['course_id']
         # course = models.Course.objects.get(pk=course_id)
