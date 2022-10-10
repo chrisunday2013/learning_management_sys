@@ -19,6 +19,11 @@ class Teacher(models.Model):
         verbose_name_plural="1. Teachers"
 
 
+    def total_teacher_courses(self):
+        total_courses=Course.objects.filter(teacher=self).count()
+        return total_courses
+
+
     def skill_list(self):
          skill_list=self.skills.split(',')
          return skill_list
