@@ -305,7 +305,7 @@ class UpdateAssignment(generics.RetrieveUpdateDestroyAPIView):
 class Student_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Student.objects.all()
     serializer_class=StudentSerializer 
-    # permission_classes=[permissions.IsAuthenticated]   
+
 
 
 @csrf_exempt
@@ -412,8 +412,7 @@ class AttemptQuizList(generics.ListCreateAPIView):
         if 'quiz_id' in self.kwargs:
             quiz_id=self.kwargs['quiz_id']
             quiz = models.Quiz.objects.get(pk=quiz_id)
-        return models.AttemptQuiz.objects.filter(quiz=quiz).values('student')
-            # .raw(f'SELECT * FROM base_attemptquiz WHERE quiz_id={int(quiz_id)} GROUP by student_id')
+        return models.AttemptQuiz.objects.raw(f'SELECT * FROM base_attemptquiz WHERE quiz_id={int(quiz_id)} GROUP by student_id')
 
 
 def fetch_quiz_attempt_status(request, quiz_id, student_id):
@@ -427,12 +426,18 @@ def fetch_quiz_attempt_status(request, quiz_id, student_id):
         return JsonResponse({'bool':False})               
 
        
-# def fetch_quiz_attempt_status(request, quiz_id, student_id):
-#     quiz=models.Quiz.objects.filter(id=quiz_id).first()
-#     student=models.Student.objects.filter(id=student_id).first()
-#     total_questions=models.QuizQuestions.objects.filter(quiz=quiz).count()
-#     total_attempted_questions=models.AttemptQuiz.objects.filter(quiz=quiz,student=student).values('student').count()
-#     return JsonResponse({'total_questions':total_questions, 'total_attempted':total_attempted_questions})  
+def fetch_quiz_status(request, quiz_id, student_id):
+    quiz=models.Quiz.objects.filter(id=quiz_id).first()
+    student=models.Student.objects.filter(id=student_id).first()
+    total_questions=models.QuizQuestions.objects.filter(quiz=quiz).count()
+    total_attempted_questions=models.AttemptQuiz.objects.filter(quiz=quiz,student=student).values('student').count()
+    attempted_questions=models.AttemptQuiz.objects.filter(quiz=quiz, student=student)
+
+    total_correct_questions=0
+    for attempt in attempted_questions:
+        if attempt.right_ans == attempt.question.right_ans:
+            total_correct_questions+=1
+    return JsonResponse({'total_questions':total_questions, 'total_correct_questions':total_correct_questions, 'total_attempted_questions':total_attempted_questions})  
 
 
 class StudyMaterialList(generics.ListCreateAPIView):
