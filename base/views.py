@@ -1,4 +1,4 @@
-from xml.etree.ElementInclude import LimitedRecursiveIncludeError
+
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,12 +9,19 @@ from rest_framework import permissions
 from rest_framework import generics
 from . import models
 from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
 
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 4
+    page_size_query_param = 'page_size'
+    max_page_size = 4
 
 
 class TeacherList(generics.ListCreateAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherSerializer
+    # pagination_class=StandardResultsSetPagination
     
     def get_queryset(self):
         if 'popular' in self.request.GET:
@@ -26,7 +33,6 @@ class TeacherList(generics.ListCreateAPIView):
 class Teacher_update_destroy_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherSerializer 
-    # permission_classes=[permissions.IsAuthenticated]   
 
 
 @csrf_exempt
@@ -53,6 +59,7 @@ class CategoryList(generics.ListCreateAPIView):
 class CourseList(generics.ListCreateAPIView):
     queryset=models.Course.objects.all()
     serializer_class=CourseSerializer
+    pagination_class=StandardResultsSetPagination
     
     def get_queryset(self):
         qs=super().get_queryset()
@@ -137,7 +144,6 @@ class Chapter_upate_detail(generics.RetrieveUpdateDestroyAPIView):
 class StudentList(generics.ListCreateAPIView):
     queryset=models.Student.objects.all()
     serializer_class=StudentSerializer
-    # permission_classes=[permissions.IsAuthenticated]
 
 
 @csrf_exempt
@@ -191,6 +197,7 @@ class EnrolledStudentList(generics.ListAPIView):
 class CourseRatingList(generics.ListCreateAPIView):
     queryset=models.CourseRating.objects.all()
     serializer_class=CourseRatingSerializer
+    pagination_class=StandardResultsSetPagination
 
     def get_queryset(self):
         if 'popular' in self.request.GET:
@@ -355,7 +362,6 @@ class TeacherQuizDetail(generics.RetrieveUpdateDestroyAPIView):
 class Quiz_upate_detail(generics.RetrieveUpdateDestroyAPIView):
     queryset=models.Quiz.objects.all()
     serializer_class=QuizSerializer  
-
 
 
 

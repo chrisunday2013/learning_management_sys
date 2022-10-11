@@ -1,5 +1,4 @@
 
-from tkinter import CASCADE
 from django.db import models
 from django.core import serializers
 
