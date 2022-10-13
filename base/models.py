@@ -225,6 +225,11 @@ class Quiz(models.Model):
     class Meta:
         verbose_name_plural="11. Quiz"
 
+    
+    def __str__(self):
+        return self.title        
+    
+
 
 class QuizQuestions(models.Model):
     quiz=models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True)
@@ -239,6 +244,11 @@ class QuizQuestions(models.Model):
     class Meta:
         verbose_name_plural="12. Quiz Questions"
 
+    
+    def __str__(self):
+        return self.questions       
+    
+
 class CourseQuiz(models.Model):
     teacher=models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True)
     course=models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
@@ -249,6 +259,10 @@ class CourseQuiz(models.Model):
     class Meta:
         verbose_name_plural="13. Course Quiz" 
 
+    
+    def __str__(self):
+        return self.quiz       
+    
 
 class AttemptQuiz(models.Model):
     student=models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
@@ -262,6 +276,11 @@ class AttemptQuiz(models.Model):
         verbose_name_plural="14. Attempted Questions" 
 
 
+    
+    def __str__(self):
+        return self.student       
+    
+
 class StudyMaterial(models.Model):
     course=models.ForeignKey(Course, on_delete=models.CASCADE)
     title=models.CharField(max_length=150)
@@ -271,4 +290,19 @@ class StudyMaterial(models.Model):
 
     class Meta:
         verbose_name_plural="15. Study Materials"
-      
+
+    
+    def __str__(self):
+        return self.title        
+
+
+class Fags(models.Model):
+    question=models.CharField(max_length=700)    
+    answer=models.TextField()
+
+    class Meta:
+        verbose_name_plural="16. FAQs"    
+    
+    def __str__(self):
+        return self.question      
+  
