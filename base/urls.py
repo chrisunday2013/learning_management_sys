@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('teacher', views.TeacherList.as_view()),
+    path('teacher/', views.TeacherList.as_view()),
     path('teacher/<int:pk>', views.Teacher_update_destroy_detail.as_view()),
     path('teacher-login', views.teacher_login),
     path('category/', views.CategoryList.as_view()),
@@ -64,7 +64,11 @@ urlpatterns = [
     path('user/study-materials/<int:course_id>', views.StudyMaterialList.as_view()),
     path('attempted-quiz/<int:quiz_id>', views.AttemptQuizList.as_view()),
     path('update-view/<int:course_id>', views.update_view),
+
     path('faq/', views.faqList.as_view()),
+
+    path('pages/', views.FlatPagesList.as_view()),
+    path('pages/<int:pk>/<str:page_slug>', views.FlatPagesDetail.as_view()),
 
     # path('fetch-quiz-result/<int:quiz_id_result>/<int:student_id>', views.fetch_quiz_attempt_status)
 

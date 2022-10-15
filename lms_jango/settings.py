@@ -29,6 +29,9 @@ DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
+# FOR ABOUT US AND CONTACT US PAGE
+SITE_ID = 1
+
 
 # Application definition
 
@@ -43,6 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # for about and contact us page
+    'django.contrib.sites',
+    'django.contrib.flatpages',
 ]
 
 MIDDLEWARE = [

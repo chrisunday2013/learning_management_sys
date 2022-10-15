@@ -2,14 +2,15 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import AttemptQuizSerializer, CategorySerializer, ChapterSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, FaqsSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, StudyMaterialSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import AttemptQuizSerializer, CategorySerializer, ChapterSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, FaqsSerializer, FlatPagesSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, StudyMaterialSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
 from rest_framework import generics
 from . import models
-from django.db.models import Q
+from django.db.models import Q, Count, Avg,F
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.flatpages.models import FlatPage
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -21,11 +22,12 @@ class StandardResultsSetPagination(PageNumberPagination):
 class TeacherList(generics.ListCreateAPIView):
     queryset=models.Teacher.objects.all()
     serializer_class=TeacherSerializer
-    # pagination_class=StandardResultsSetPagination
+    pagination_class=StandardResultsSetPagination
     
     def get_queryset(self):
         if 'popular' in self.request.GET:
             sql="SELECT * ,COUNT(c.id) as total_course FROM base_teacher as t INNER JOIN base_course as c ON c.teacher_id=t.id GROUP BY t.id ORDER BY total_course desc"
+        
         return models.Teacher.objects.raw(sql)
 
 
@@ -471,3 +473,13 @@ class faqList(generics.ListCreateAPIView):
     queryset=models.Fags.objects.all()
     serializer_class=FaqsSerializer
     
+
+class FlatPagesList(generics.ListAPIView):
+    queryset= FlatPage.objects.all()
+    serializer_class=FlatPagesSerializer
+
+
+class FlatPagesDetail(generics.RetrieveAPIView):
+    queryset= FlatPage.objects.all()
+    serializer_class=FlatPagesSerializer
+            
