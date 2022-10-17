@@ -1,6 +1,7 @@
 
 from django.db import models
 from django.core import serializers
+from django.core.mail import send_mail
 
 
 class Teacher(models.Model):
@@ -29,11 +30,7 @@ class Teacher(models.Model):
     
 
     def __str__(self):
-        return self.full_name    
-
-    def total_teacher_courses(self):
-        total_courses=Course.objects.filter(teacher=self).count()
-        return total_courses
+        return self.full_name   
 
     
     def total_teacher_chapters(self):
@@ -306,3 +303,32 @@ class Fags(models.Model):
     def __str__(self):
         return self.question      
   
+
+
+class Contact(models.Model):
+    full_name=models.CharField(max_length=100)
+    email=models.EmailField()
+    query=models.TextField()
+    add_time=models.DateTimeField(auto_now=True)
+
+     
+    def __str__(self):
+        return self.query   
+
+    def save(self, *args, **kwargs):
+                
+        send_mail(
+            'Contact Query',
+            'Here is the message.',
+            'potentialsunny47@gmail.com',
+            [self.email],
+            fail_silently=False,
+            html_message=f'<p>{self.full_name}</p><p>{self.query}</p>'
+        )
+        return super(Contact,self).save(*args, **kwargs)     
+
+    class Meta:
+        verbose_name_plural="17. Contact Us"
+
+
+   

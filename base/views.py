@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import AttemptQuizSerializer, CategorySerializer, ChapterSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, FaqsSerializer, FlatPagesSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, StudyMaterialSerializer, TeacherDashboardSerializer, TeacherSerializer
+from .serializer import AttemptQuizSerializer, CategorySerializer, ChapterSerializer, ContactSerializer, CourseQuizSerializer, CourseRatingSerializer, CourseSerializer, FaqsSerializer, FlatPagesSerializer, NotificationSerializer, QuestionSerializer, QuizSerializer, StudentAssignmentSerializer, StudentCourseEnrollSerializer, StudentDashboardSerializer, StudentFavoriteCourseSerializer, StudentSerializer, StudyMaterialSerializer, TeacherDashboardSerializer, TeacherSerializer
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions
@@ -483,3 +483,7 @@ class FlatPagesDetail(generics.RetrieveAPIView):
     queryset= FlatPage.objects.all()
     serializer_class=FlatPagesSerializer
             
+
+class ContactList(generics.ListCreateAPIView):
+    queryset=models.Contact.objects.all()
+    serializer_class=ContactSerializer
