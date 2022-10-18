@@ -44,12 +44,27 @@ def teacher_login(request):
 
     try:
         teacherData=models.Teacher.objects.get(email=email,password=password)
-    except models.Teacher.DoesNotExist:   
+    except models.Teacher.DoesNotExist: 
          teacherData=None
-    if teacherData:     
-         return JsonResponse({'bool':True, 'teacher_id':teacherData.id})
+    if teacherData: 
+        if not teacherData.verify_status:
+            return JsonResponse({'bool':False, 'msg':'Account is not verified!!'})
+        else:
+             return JsonResponse({'bool':True, 'teacher_id':teacherData.id})   
+    else:
+        return JsonResponse({'bool':False,'msg':'Invalid Email or Password!!'})   
+
+
+@csrf_exempt
+def verifyTeacherOTP(request, teacher_id):
+    otp_digit=request.POST.get('otp_digit')
+    verify=models.Teacher.objects.filter(id=teacher_id, otp_digit=otp_digit).first()
+    if verify: 
+         models.Teacher.objects.filter(id=teacher_id, otp_digit=otp_digit).update(verify_status=True) 
+         return JsonResponse({'bool':True, 'teacher_id':verify.id})
     else:
         return JsonResponse({'bool':False})    
+
 
 
 class CategoryList(generics.ListCreateAPIView):
@@ -231,12 +246,11 @@ def teacher_password_change(request, teacher_id):
     password=request.POST['password']
 
     try:
-        teacherData=models.Teacher.objects.get(id=teacher_id)
+        teacherData=models.Teacher.objects.get()
     except models.Teacher.DoesNotExist:   
          teacherData=None
-    if teacherData:  
-         models.Teacher.objects.filter(id=teacher_id).update(password=password)   
-         return JsonResponse({'bool':True})
+    if teacherData:   
+         return JsonResponse({'bool':True, 'teacher_id':teacherData.id})
     else:
         return JsonResponse({'bool':False})    
 
@@ -487,3 +501,4 @@ class FlatPagesDetail(generics.RetrieveAPIView):
 class ContactList(generics.ListCreateAPIView):
     queryset=models.Contact.objects.all()
     serializer_class=ContactSerializer
+

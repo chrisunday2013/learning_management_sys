@@ -13,6 +13,8 @@ class Teacher(models.Model):
     skills=models.TextField()
     profile_img=models.ImageField(upload_to='teacher_profile_imgs/', null=True)
     detail=models.TextField(null=True)
+    verify_status=models.BooleanField(default=False)
+    otp_digit=models.CharField(max_length=10, null=True)
 
 
     class Meta:
@@ -40,8 +42,8 @@ class Teacher(models.Model):
     
     def total_teacher_students(self):
         total_students=StudentCourseEnrollment.objects.filter(course__teacher=self).count()
-        return total_students        
-
+        return total_students    
+        
 
 class CourseCategory(models.Model):
     title=models.CharField(max_length=100)
@@ -111,6 +113,8 @@ class Student(models.Model):
     password=models.CharField(max_length=100, null=True, blank=True)
     profile_img=models.ImageField(upload_to='student_profile_imgs/', null=True)
     interested_categories=models.TextField()
+    verify_status=models.BooleanField(default=False)
+    otp_digit=models.CharField(max_length=10, null=True)
 
     class Meta:
         verbose_name_plural="5. Students"

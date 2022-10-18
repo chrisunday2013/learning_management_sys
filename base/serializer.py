@@ -3,12 +3,13 @@ from rest_framework import serializers
 from . import models 
 from django.contrib.flatpages.models import FlatPage
 from rest_framework.response import Response
+from django.core.mail import send_mail
 
 
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Teacher
-        fields=['id', 'full_name', 'email', 'password', 'qualification', 'detail','mobile_no', 'skills', 'teacher_courses', 'skill_list', 'profile_img', 'total_teacher_courses']
+        fields=['id', 'full_name', 'email', 'password', 'qualification', 'detail','mobile_no', 'skills', 'teacher_courses','otp_digit', 'skill_list', 'profile_img', 'total_teacher_courses']
     
               
     def __init__(self, *args, **kwargs):
@@ -17,6 +18,21 @@ class TeacherSerializer(serializers.ModelSerializer):
         self.Meta.depth = 0 
         if request and request.method == 'GET':
             self.Meta.depth = 1  
+
+
+    def create(self, validate_data):
+        email=self.validated_data['email']
+        otp_digit=self.validated_data['otp_digit']
+        instance = super(TeacherSerializer, self).create(validate_data)   
+        send_mail(
+            'Verify Account',
+            'Please verify your account',
+            'potentialsunny47@gmail.com',
+            [email],
+            fail_silently=False,
+            html_message=f'<P>Your OTP is</p><p>{otp_digit}</p>'
+        )     
+        return instance
 
 
 
@@ -148,6 +164,7 @@ class QuizSerializer(serializers.ModelSerializer):
             self.Meta.depth = 2 
 
 
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.QuizQuestions
@@ -217,6 +234,7 @@ class FlatPagesSerializer(serializers.ModelSerializer):
     class Meta:
         model=FlatPage
         fields=['id', 'title', 'content', 'url']              
+
 
 
 class ContactSerializer(serializers.ModelSerializer):
