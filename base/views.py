@@ -11,6 +11,8 @@ from . import models
 from django.db.models import Q, Count, Avg,F
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.flatpages.models import FlatPage
+from django.core.mail import send_mail
+from random import randint
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -50,7 +52,22 @@ def teacher_login(request):
         if not teacherData.verify_status:
             return JsonResponse({'bool':False, 'msg':'Account is not verified!!'})
         else:
-             return JsonResponse({'bool':True, 'teacher_id':teacherData.id})   
+            if teacherData.login_auth_otp:
+                # Send OTP Email
+                otp_digit=randint(100000,999999)
+                send_mail(
+                    'Verify Account',
+                    'Please verify your account',
+                    'potentialsunny@gmail.com',
+                    [teacherData.email],
+                    fail_silently=False,
+                    html_message=f'<p>Your OTP is</p><p>{otp_digit}</p>'
+                )
+                teacherData.otp_digit=otp_digit
+                teacherData.save()
+                return JsonResponse({'bool':True, 'teacher_id':teacherData.id, 'login_auth_otp':True})   
+            else:    
+                return JsonResponse({'bool':True, 'teacher_id':teacherData.id, 'login_auth_otp':False})   
     else:
         return JsonResponse({'bool':False,'msg':'Invalid Email or Password!!'})   
 
@@ -60,10 +77,10 @@ def verifyTeacherOTP(request, teacher_id):
     otp_digit=request.POST.get('otp_digit')
     verify=models.Teacher.objects.filter(id=teacher_id, otp_digit=otp_digit).first()
     if verify: 
-         models.Teacher.objects.filter(id=teacher_id, otp_digit=otp_digit).update(verify_status=True) 
-         return JsonResponse({'bool':True, 'teacher_id':verify.id})
+        models.Teacher.objects.filter(id=teacher_id, otp_digit=otp_digit).update(verify_status=True) 
+        return JsonResponse({'bool':True, 'teacher_id':verify.id})
     else:
-        return JsonResponse({'bool':False})    
+        return JsonResponse({'bool':False, 'msg':'Please enter 6 valid OTP digits'})    
 
 
 

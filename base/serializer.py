@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Teacher
-        fields=['id', 'full_name', 'email', 'password', 'qualification', 'detail','mobile_no', 'skills', 'teacher_courses','otp_digit', 'skill_list', 'profile_img', 'total_teacher_courses']
+        fields=['id', 'full_name', 'email', 'password', 'qualification', 'detail','mobile_no', 'skills', 'login_auth_otp','teacher_courses','otp_digit', 'skill_list', 'profile_img', 'total_teacher_courses']
     
               
     def __init__(self, *args, **kwargs):
@@ -75,7 +75,7 @@ class ChapterSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Student
-        fields=['id', 'full_name', 'email', 'username', 'password', 'interested_categories', 'otp_digit','profile_img']
+        fields=['id', 'full_name', 'email', 'username', 'password', 'interested_categories', 'otp_digit','profile_img''login_auth_otp',]
 
     def create(self, validate_data):
         email=self.validated_data['email']

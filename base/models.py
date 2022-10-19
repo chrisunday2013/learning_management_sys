@@ -15,6 +15,7 @@ class Teacher(models.Model):
     detail=models.TextField(null=True)
     verify_status=models.BooleanField(default=False)
     otp_digit=models.CharField(max_length=10, null=True)
+    login_auth_otp=models.BooleanField(default=False)
 
 
     class Meta:
@@ -115,6 +116,7 @@ class Student(models.Model):
     interested_categories=models.TextField()
     verify_status=models.BooleanField(default=False)
     otp_digit=models.CharField(max_length=10, null=True)
+    login_auth_otp=models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural="5. Students"
