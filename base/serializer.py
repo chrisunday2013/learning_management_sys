@@ -75,8 +75,21 @@ class ChapterSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Student
-        fields=['id', 'full_name', 'email', 'username', 'password', 'interested_categories', 'profile_img']
+        fields=['id', 'full_name', 'email', 'username', 'password', 'interested_categories', 'otp_digit','profile_img']
 
+    def create(self, validate_data):
+        email=self.validated_data['email']
+        otp_digit=self.validated_data['otp_digit']
+        instance = super(StudentSerializer, self).create(validate_data)
+        send_mail(
+            'Verify Account',
+            'Please verify your account',
+            'potentialsunny@gmail.com',
+            [email],
+            fail_silently=False,
+            html_message=f'<p>Your OTP is</p><p>{otp_digit}</p>'
+        )
+        return instance
 
 class StudentCourseEnrollSerializer(serializers.ModelSerializer):
     class Meta:

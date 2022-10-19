@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('teacher/', views.TeacherList.as_view()),
     path('verify-teacher/<int:teacher_id>/', views.verifyTeacherOTP),
+
     path('contact/', views.ContactList.as_view()),
     path('teacher/<int:pk>', views.Teacher_update_destroy_detail.as_view()),
     path('teacher-login', views.teacher_login),
@@ -19,6 +20,8 @@ urlpatterns = [
     path('popular-courses/' , views.CourseRatingList.as_view()),
     path('teacherCourse-details/<int:pk>', views.TeacherCourse_upate_detail_delete.as_view()),
     path('student/', views.StudentList.as_view()),
+    path('verify-student/<int:student_id>/', views.VerifyStudentOtp),
+
     path('student-login', views.student_login),
     path('studentCourse-enrolled/', views.StudentEnrollCourseList.as_view()),
     path('fetchEnroll-status/<int:student_id>/<int:course_id>', views.studentEnrolledStatus),
