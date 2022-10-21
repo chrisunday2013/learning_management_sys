@@ -583,3 +583,36 @@ def teacherResetPassword(request, teacher_id):
     else:
         return JsonResponse({'bool':False, 'msg':'Oops... Something went wrong!!'})    
 
+
+
+
+@csrf_exempt
+def studentForgotPassword(request):
+    email=request.POST.get('email')
+    verify=models.Student.objects.filter(email=email).first()
+    if verify: 
+        link=f"http://localhost:3000/student-reset-password/{verify.id}/"
+        send_mail(
+                'Verify Account',
+                'Please verify your account',
+                'potentialsunny@gmail.com',
+                [email],
+                fail_silently=False,
+                html_message=f'<p>Your OTP is</p><p>{link}</p>'
+                )
+        return JsonResponse({'bool':True,  'msg':'Please check your email'})
+    else:
+        return JsonResponse({'bool':False, 'msg':'Invalid Email!!'})    
+
+
+
+@csrf_exempt
+def studentResetPassword(request, student_id):
+    password=request.POST.get('password')
+    verify=models.Student.objects.filter(id=student_id).first()
+    if verify: 
+        models.Student.objects.filter(id=student_id).update(password=password)
+        return JsonResponse({'bool':True,  'msg':'Password has been reset'})
+    else:
+        return JsonResponse({'bool':False, 'msg':'Oops... Something went wrong!!'})    
+
