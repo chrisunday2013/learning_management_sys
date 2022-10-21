@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     path('teacher/', views.TeacherList.as_view()),
     path('verify-teacher/<int:teacher_id>/', views.verifyTeacherOTP),
+    path('teacher-forgot-password/', views.teacherForgotPassword),
+    path('teacher-reset-password/<int:teacher_id>/', views.teacherResetPassword),
 
     path('contact/', views.ContactList.as_view()),
     path('teacher/<int:pk>', views.Teacher_update_destroy_detail.as_view()),
@@ -78,3 +80,4 @@ urlpatterns = [
     # path('fetch-quiz-result/<int:quiz_id_result>/<int:student_id>', views.fetch_quiz_attempt_status)
 
 ]
+

@@ -83,7 +83,6 @@ def verifyTeacherOTP(request, teacher_id):
         return JsonResponse({'bool':False, 'msg':'Please enter 6 valid OTP digits'})    
 
 
-
 class CategoryList(generics.ListCreateAPIView):
     queryset=models.CourseCategory.objects.all()
     serializer_class=CategorySerializer
@@ -181,6 +180,8 @@ class StudentList(generics.ListCreateAPIView):
     serializer_class=StudentSerializer
 
 
+
+
 @csrf_exempt
 def student_login(request):
     email=request.POST['email']
@@ -190,14 +191,27 @@ def student_login(request):
     except models.Student.DoesNotExist:   
          studentData=None
     if studentData:     
-         return JsonResponse({'bool':True, 'student_id':studentData.id})
+        if not studentData.verify_status:
+            return JsonResponse({'bool':False, 'msg':'Account is not verified!!'})
+        else:
+            if studentData.login_auth_otp:
+                # Send OTP Email
+                otp_digit=randint(100000,999999)
+                send_mail(
+                    'Verify Account',
+                    'Please verify your account',
+                    'potentialsunny@gmail.com',
+                    [studentData.email],
+                    fail_silently=False,
+                    html_message=f'<p>Your OTP is</p><p>{otp_digit}</p>'
+                )
+                studentData.otp_digit=otp_digit
+                studentData.save()
+                return JsonResponse({'bool':True, 'student_id':studentData.id, 'login_auth_otp':True})   
+            else:    
+                return JsonResponse({'bool':True, 'student_id':studentData.id, 'login_auth_otp':False})   
     else:
-        return JsonResponse({'bool':False})    
-
-
-class StudentEnrollCourseList(generics.ListCreateAPIView):
-    queryset=models.StudentCourseEnrollment.objects.all()
-    serializer_class=StudentCourseEnrollSerializer
+        return JsonResponse({'bool':False,'msg':'Invalid Email or Password!!'})   
 
 
 @csrf_exempt
@@ -208,7 +222,14 @@ def VerifyStudentOtp(request, student_id):
          models.Student.objects.filter(id=student_id, otp_digit=otp_digit).update(verify_status=True) 
          return JsonResponse({'bool':True, 'student_id':verify.id})
     else:
-        return JsonResponse({'bool':False})    
+        return JsonResponse({'bool':False, 'msg':'Please enter 6 valid OTP digits'})    
+
+        
+
+class StudentEnrollCourseList(generics.ListCreateAPIView):
+    queryset=models.StudentCourseEnrollment.objects.all()
+    serializer_class=StudentCourseEnrollSerializer
+
 
 
 def studentEnrolledStatus(request, student_id, course_id):
@@ -529,4 +550,36 @@ class FlatPagesDetail(generics.RetrieveAPIView):
 class ContactList(generics.ListCreateAPIView):
     queryset=models.Contact.objects.all()
     serializer_class=ContactSerializer
+
+
+
+@csrf_exempt
+def teacherForgotPassword(request):
+    email=request.POST.get('email')
+    verify=models.Teacher.objects.filter(email=email).first()
+    if verify: 
+        link=f"http://localhost:3000/teacher-reset-password/{verify.id}/"
+        send_mail(
+                'Verify Account',
+                'Please verify your account',
+                'potentialsunny@gmail.com',
+                [email],
+                fail_silently=False,
+                html_message=f'<p>Your OTP is</p><p>{link}</p>'
+                )
+        return JsonResponse({'bool':True,  'msg':'Please check your email'})
+    else:
+        return JsonResponse({'bool':False, 'msg':'Invalid Email!!'})    
+
+
+
+@csrf_exempt
+def teacherResetPassword(request, teacher_id):
+    password=request.POST.get('password')
+    verify=models.Teacher.objects.filter(id=teacher_id).first()
+    if verify: 
+        models.Teacher.objects.filter(id=teacher_id).update(password=password)
+        return JsonResponse({'bool':True,  'msg':'Password has been reset'})
+    else:
+        return JsonResponse({'bool':False, 'msg':'Oops... Something went wrong!!'})    
 

@@ -75,7 +75,7 @@ class ChapterSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Student
-        fields=['id', 'full_name', 'email', 'username', 'password', 'interested_categories', 'otp_digit','profile_img''login_auth_otp',]
+        fields=['id', 'full_name', 'email', 'username', 'password', 'interested_categories', 'otp_digit','profile_img','login_auth_otp']
 
     def create(self, validate_data):
         email=self.validated_data['email']
