@@ -82,5 +82,8 @@ urlpatterns = [
 
     # path('fetch-quiz-result/<int:quiz_id_result>/<int:student_id>', views.fetch_quiz_attempt_status)
 
+    path('send-message/<int:teacher_id>/<int:student_id>', views.teacher_student_msg),
+    path('get-messages/<int:teacher_id>/<int:student_id>', views.get_teacher_student_msg.as_view()),
+
 ]
 
